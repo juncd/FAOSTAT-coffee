@@ -1,6 +1,6 @@
 # preparation # 
 library(tidyverse)
-production <- read.csv(".csv") # path
+production <- read_csv(".csv") # path
 production %>% count(Element)
 production %>% count(Area)
 
@@ -36,6 +36,7 @@ production_v2 <- df %>%
   reframe(Area, Year, Production_t, Area_harvested, Yield_g_ha)
 View(production_v2)
 
+write_csv(production_v2, "Coffee Production 1961-2022.csv")
 
 
 # alternatively, you can use sqldf function to operate the same merge  
