@@ -10,37 +10,45 @@ production <- production %>%
 
 
 
-# splitting the tables in three groups and copy "Value" into a new column
+# splitting the tables in three groups and change the name of the "Value" column #
 production_area <- production %>% 
   filter(Element == "Area harvested")
-production_area$Area_harvested <- production_area$Value
-View(production_area)
+colnames(production_area)[6] <- "Area.Harvested"
+  View(production_area)
 
 production_t <- production %>% 
   filter(Element == "Production")
-production_t$Production_t <- production_t$Value
+colnames(production_t)[6] <- "Production.t"
 View(production_t)
 
 production_yield <- production %>% 
   filter(Element == "Yield")
-production_yield$Yield_g_ha <- production_yield$Value
+colnames(production_yield)[6] <- "Production.Yield"
 View(production_yield)
 
 
-# merge data frames
+# merge data frames and export #
 # the details of each data (Flag and Note) will be removed with this action
-# please use individual tables if you want to look at each data
+# please use individual tables if you want to look each data
 df <- merge(production_t, production_area, by = c("Area", "Year"))
 df <- merge(df, production_yield, by = c("Area", "Year"))
 production_v2 <- df %>% 
-  reframe(Area, Year, Production_t, Area_harvested, Yield_g_ha)
+  reframe(Area, Year, Production.t, Area.Harvested, Production.Yield)
 View(production_v2)
 
-write_csv(production_v2, "Coffee Production 1961-2022.csv")
+write_csv(production_v2, "Coffee_Production_1961-2022.csv")
+
+
+
+# individual data table #
+write_csv(production_area, "Coffee_Production_Area_Harvested.csv")
+write_csv(production_t, "Coffee_Production_Volume.csv")
+write_csv(production_yield, "Coffee_Production_Yield.csv")
+
 
 
 # alternatively, you can use sqldf function to operate the same merge  
-# below were unused, but useful method using sqldf function if you are more familiar with SQL (like me)
+# below were unused, but useful method using sqldf function if you are more familiar with SQL
 
 # install.packages("sqldf")
 # library(sqldf)
