@@ -1,0 +1,59 @@
+# preparation # 
+library(tidyverse)
+production <- read.csv(".csv") # path
+production %>% count(Element)
+production %>% count(Area)
+
+production <- production %>% 
+  reframe(Area, Year, Item, Element, Unit, 
+          Value, Flag, Flag.Description, Note)
+
+
+
+# splitting the tables in three groups and copy "Value" into a new column
+production_area <- production %>% 
+  filter(Element == "Area harvested")
+production_area$Area_harvested <- production_area$Value
+View(production_area)
+
+production_t <- production %>% 
+  filter(Element == "Production")
+production_t$Production_t <- production_t$Value
+View(production_t)
+
+production_yield <- production %>% 
+  filter(Element == "Yield")
+production_yield$Yield_g_ha <- production_yield$Value
+View(production_yield)
+
+
+# merge data frames
+# the details of each data (Flag and Note) will be removed with this action
+# please use individual tables if you want to look at each data
+df <- merge(production_t, production_area, by = c("Area", "Year"))
+df <- merge(df, production_yield, by = c("Area", "Year"))
+production_v2 <- df %>% 
+  reframe(Area, Year, Production_t, Area_harvested, Yield_g_ha)
+View(production_v2)
+
+
+
+# alternatively, you can use sqldf function to operate the same merge  
+# below were unused, but useful method using sqldf function if you are more familiar with SQL (like me)
+
+# install.packages("sqldf")
+# library(sqldf)
+#
+# df <- sqldf('SELECT production_t.*, production_area.Area_harvested
+#              FROM production_t
+#              LEFT JOIN production_area
+#              ON production_t.Area = production_area.Area AND production_t.Year = production_area.Year')
+#
+# df <- sqldf('SELECT df.*, production_yield.Yield_g_ha
+#              FROM df
+#              LEFT JOIN production_yield
+#              ON df.Area = production_yield.Area AND df.Year = production_yield.Year')
+#
+# production_v2 <- df %>% 
+#   reframe(Area, Year, Production_t, Area_harvested, Yield_g_ha)
+
