@@ -36,9 +36,22 @@ production_v2 <- df %>%
   reframe(Area, Year, Production.t, Area.Harvested, Production.Yield)
 View(production_v2)
 
+
+
+# add continent and region #
+#install.packages("countrycode")
+library(countrycode)
+production_v2 <- production_v2 %>% 
+  mutate(Continent = countrycode(sourcevar = production_v2[, "Area"], 
+                                origin = "country.name",
+                                destination = "continent")) %>% 
+  mutate(Region = countrycode(sourcevar = production_v2[, "Area"],
+                              origin = "country.name",
+                              destination = "region"))
+View(production_v2)
+
+# export #
 write_csv(production_v2, "Coffee_Production_1961-2022.csv")
-
-
 
 # individual data table #
 write_csv(production_area, "Coffee_Production_Area_Harvested.csv")
