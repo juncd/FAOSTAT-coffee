@@ -1,5 +1,6 @@
 # FAOSTAT-coffee
-Coffee production data gathered on FAOSTAT
+Coffee production data gathered on FAOSTAT.
+"Processing Coffee Production data" shows the R codes that I used to transform the original data.
 
 ## The original data in this repository
 This repository has files and data originating in [FAOSTAT](https://www.fao.org/faostat/en/#home)
