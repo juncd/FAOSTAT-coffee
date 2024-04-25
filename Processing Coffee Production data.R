@@ -1,6 +1,6 @@
 # preparation # 
 library(tidyverse)
-production <- read_csv(".csv") # path
+production <- read.csv(".csv") # path
 production %>% count(Element)
 production %>% count(Area)
 
